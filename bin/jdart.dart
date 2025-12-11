@@ -57,9 +57,9 @@ Future<void> main(List<String> arguments) async {
     String dclass = Parser.generateDartClass(
       jsonString,
       className,
-      false,
-      false,
-      false,
+      true,
+      true,
+      true,
     );
 
     if (dclass.isEmpty) {
