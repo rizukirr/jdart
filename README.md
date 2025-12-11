@@ -38,7 +38,7 @@ export PATH="$PATH:$(pwd)/build/release"
 # ./install.sh
 ```
 
-### Option 3: Run with Dart SDK
+### Optional : Run with Dart SDK
 
 ```bash
 dart pub global activate --source path .
