@@ -4,7 +4,7 @@ A fast command-line tool that converts JSON into type-safe Dart class definition
 
 ## Demo
 
-![Demo](demo.gif)
+![Demo](demo-jdart.gif)
 
 ## Features
 
@@ -75,6 +75,33 @@ cat data.json | jdart Person
 # From curl/API response
 curl https://api.example.com/user | jdart User
 ```
+
+## Options
+
+By default, jdart generates three methods for each class: `fromJson`, `toJson`, and `parseList`. You can disable any of these using command-line flags:
+
+```bash
+# Disable fromJson factory constructor
+jdart --disable-fromJson '{"name": "John", "age": 30}'
+
+# Disable toJson method
+jdart --disable-toJson Person '{"name": "John"}'
+
+# Disable parseList static method
+jdart --disable-parseList '{"id": 1, "name": "Item"}'
+
+# Combine multiple flags
+jdart --disable-fromJson --disable-toJson User '{"name": "John"}'
+
+# Works with piped input too
+cat data.json | jdart --disable-parseList Person
+```
+
+Available flags:
+- `--disable-fromJson`: Disables generation of the `fromJson` factory constructor
+- `--disable-toJson`: Disables generation of the `toJson` method
+- `--disable-parseList`: Disables generation of the static `parseList` method
+- `--help`, `-h`: Displays usage information
 
 ## How It Works
 

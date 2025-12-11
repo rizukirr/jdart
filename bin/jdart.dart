@@ -5,6 +5,33 @@ Future<void> main(List<String> arguments) async {
   String? className;
   String jsonString;
 
+  // Parse flags
+  bool enableFromJson = true;
+  bool enableToJson = true;
+  bool enableParseList = true;
+
+  // Separate flags from positional arguments
+  final List<String> positionalArgs = [];
+  for (final arg in arguments) {
+    if (arg == '--disable-fromJson') {
+      enableFromJson = false;
+    } else if (arg == '--disable-toJson') {
+      enableToJson = false;
+    } else if (arg == '--disable-parseList') {
+      enableParseList = false;
+    } else if (arg == '--help' || arg == '-h') {
+      _printUsage();
+      exit(0);
+    } else if (arg.startsWith('--')) {
+      print("Unknown flag: $arg");
+      print("");
+      _printUsage();
+      exit(1);
+    } else {
+      positionalArgs.add(arg);
+    }
+  }
+
   // Check if input is being piped
   if (stdin.hasTerminal == false) {
     // Reading from pipe
@@ -12,40 +39,32 @@ Future<void> main(List<String> arguments) async {
     jsonString = jsonString.trim();
 
     // Optional: First argument can be the class name when piping
-    if (arguments.length == 1) {
-      className = arguments[0];
-    } else if (arguments.isEmpty) {
+    if (positionalArgs.length == 1) {
+      className = positionalArgs[0];
+    } else if (positionalArgs.isEmpty) {
       className = null;
     } else {
       print("Usage with pipe:");
-      print("  cat file.json | jdart                  # Auto class name");
-      print("  cat file.json | jdart <ClassName>      # Explicit class name");
+      print("  cat file.json | jdart [options]                    # Auto class name");
+      print("  cat file.json | jdart [options] <ClassName>        # Explicit class name");
+      print("");
+      print("Run 'jdart --help' for more information");
       exit(1);
     }
   } else {
     // Reading from command-line arguments
-    if (arguments.isEmpty || arguments.length > 2) {
-      print("Usage:");
-      print(
-        "  jdart <json string>                    # Extract class name from JSON",
-      );
-      print(
-        "  jdart <Class Name> <json string>       # Explicitly provide class name",
-      );
-      print("");
-      print("Pipe usage:");
-      print("  cat file.json | jdart                  # Auto class name");
-      print("  cat file.json | jdart <ClassName>      # Explicit class name");
+    if (positionalArgs.isEmpty || positionalArgs.length > 2) {
+      _printUsage();
       exit(1);
     }
 
-    if (arguments.length == 1) {
+    if (positionalArgs.length == 1) {
       className = null;
-      jsonString = arguments[0];
+      jsonString = positionalArgs[0];
       print("Mode: Command-line with auto class name");
     } else {
-      className = arguments[0];
-      jsonString = arguments[1];
+      className = positionalArgs[0];
+      jsonString = positionalArgs[1];
       print("Mode: Command-line with explicit class name");
     }
   }
@@ -57,9 +76,9 @@ Future<void> main(List<String> arguments) async {
     String dclass = Parser.generateDartClass(
       jsonString,
       className,
-      true,
-      true,
-      true,
+      enableFromJson,
+      enableToJson,
+      enableParseList,
     );
 
     if (dclass.isEmpty) {
@@ -72,4 +91,26 @@ Future<void> main(List<String> arguments) async {
   } else {
     print("Invalid Json");
   }
+}
+
+void _printUsage() {
+  print("Usage:");
+  print("  jdart [options] <json string>");
+  print("  jdart [options] <ClassName> <json string>");
+  print("");
+  print("Options:");
+  print("  --disable-fromJson     Disable fromJson factory constructor generation");
+  print("  --disable-toJson       Disable toJson method generation");
+  print("  --disable-parseList    Disable parseList static method generation");
+  print("  --help, -h             Show this help message");
+  print("");
+  print("Pipe usage:");
+  print("  cat file.json | jdart [options]                    # Auto class name");
+  print("  cat file.json | jdart [options] <ClassName>        # Explicit class name");
+  print("");
+  print("Examples:");
+  print("  jdart '{\"name\": \"John\", \"age\": 30}'");
+  print("  jdart Person '{\"name\": \"John\", \"age\": 30}'");
+  print("  jdart --disable-toJson '{\"name\": \"John\"}'");
+  print("  cat data.json | jdart --disable-fromJson --disable-parseList User");
 }
