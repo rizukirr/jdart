@@ -4,7 +4,7 @@ A fast command-line tool that converts JSON into type-safe Dart class definition
 
 ## Demo
 
-![Demo](demo.gif)
+![Demo](demo-jdart.gif)
 
 ## Features
 
