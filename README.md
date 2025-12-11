@@ -2,6 +2,10 @@
 
 A fast command-line tool that converts JSON into type-safe Dart class definitions.
 
+## Demo
+
+![Demo](demo.gif)
+
 ## Features
 
 - Automatically generates Dart classes from JSON
