@@ -1,0 +1,12 @@
+{
+  "user": {
+    "id": 123,
+    "name": "John Doe",
+    "email": "john@example.com",
+    "profile": {
+      "bio": "Software Developer",
+      "age": 30,
+      "active": true
+    }
+  }
+}

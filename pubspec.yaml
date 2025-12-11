@@ -1,0 +1,20 @@
+name: jdart
+description: A fast command-line tool that converts JSON into type-safe Dart class definitions.
+version: 1.0.0
+homepage: https://github.com/rizukirr/jdart
+repository: https://github.com/rizukirr/jdart
+issue_tracker: https://github.com/rizukirr/jdart/issues
+
+environment:
+  sdk: ^3.10.3
+
+executables:
+  jdart:
+
+# Add regular dependencies here.
+dependencies:
+  path: ^1.9.0
+
+dev_dependencies:
+  lints: ^6.0.0
+  test: ^1.25.6
